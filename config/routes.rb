@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  resources :characters
-  resources :games
+  scope :api, defaults: { format: :json } do
+    resources :games do
+      resources :characters 
+    end
+  end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

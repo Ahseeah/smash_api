@@ -3,14 +3,17 @@ class GamesController < ApplicationController
 
   # GET /games
   def index
-    @games = Game.all
+    search = params[:search]
 
-    render json: @games
+    if search.present?
+      @games = Game.where("name ilike ?", "%#{search}%")
+    else
+      @games = Game.all
+    end
   end
 
   # GET /games/1
   def show
-    render json: @game
   end
 
   # POST /games
@@ -41,7 +44,7 @@ class GamesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_game
-      @game = Game.find(params[:id])
+      @game = Game.includes(:characters).find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.

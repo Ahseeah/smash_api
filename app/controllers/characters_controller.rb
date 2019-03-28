@@ -3,7 +3,9 @@ class CharactersController < ApplicationController
 
   # GET /characters
   def index
-    @characters = Character.all
+    @game = Game.find(params[:game_id])
+
+    @characters = @game.characters
 
     render json: @characters
   end
@@ -18,7 +20,7 @@ class CharactersController < ApplicationController
     @character = Character.new(character_params)
 
     if @character.save
-      render json: @character, status: :created, location: @character
+      render json: @character, status: :created, location: [@game, @character]
     else
       render json: @character.errors, status: :unprocessable_entity
     end
@@ -41,7 +43,9 @@ class CharactersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_character
-      @character = Character.find(params[:id])
+      @game = Game.find(params[:game_id])
+
+      @character = @game.characters.find(params[:id])
     end
 
     # Only allow a trusted parameter "white list" through.
